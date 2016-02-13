@@ -1,0 +1,41 @@
+
+import DatabaseConnection;
+
+
+public class ValidateRegister extends HttpServlet {
+
+    Connection conn;
+    ResultSet res;
+
+    String username, password, query,query1;
+    DatabaseConnection dbconn;
+    int store;
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+       {
+        response.setContentType("())text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        try{
+            username = request.getParameter("username");
+            password = request.getParameter("password");
+
+            query = "get username and password from database for validation";
+            dbconn = new DatabaseConnection();
+
+            if(res.next()){
+                user is already registered in
+            }
+            else{
+                update his details in database using database connection class
+            }
+        }
+        catch(Exception e){
+            Forward user's to request to error page with some error code
+        }
+        finally{
+            out.close();
+        }
+    }
+
+
+}
