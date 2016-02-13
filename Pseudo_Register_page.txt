@@ -1,0 +1,16 @@
+
+    <title>Registration Page</title>
+
+<h1>Regisration Page</h1>
+<form action ="ValidateRegister" method ="POST">
+         
+             Username: 
+             <input type="text" id="username" name ="username"> 
+        
+             Password: 
+             <input type="password" id="pass" name ="pass"> 
+         
+             <input type="submit" value="Register"> 
+              
+         
+ 
