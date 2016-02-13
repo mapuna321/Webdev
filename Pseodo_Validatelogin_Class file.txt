@@ -1,0 +1,96 @@
+
+import mycart.Data;
+import mycart.ProductBean;
+import mycart.db.DatabaseConnection;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+public class ValidateLogin extends HttpServlet {
+
+    Connection conn;
+    ResultSet res,res2;
+    int id;
+
+    String username, password, query,query2;
+    DatabaseConnection dbconn;
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("())text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        try{
+            username = request.getParameter("username");
+            password = request.getParameter("pass");
+            request.getSession().setAttribute("name",username);
+
+
+            query = "select * from admin where username = '"+username+"' and password = '"+password+"'";
+            query2 = "select ID from admin where username = '"+username+"' and password = '"+password+"'";
+            dbconn = new DatabaseConnection();
+            conn = dbconn.setConnection();
+            res = dbconn.getResult(query, conn);
+            res2 = dbconn.getResult(query2,conn);
+            request.getSession().setAttribute("Identity",getResult(res2));
+            if(res.next()){
+                RequestDispatcher rd = request.getRequestDispatcher("adminscreen.jsp");/*SEE*/
+                rd.forward(request,response);
+                out.write(username);
+            }
+            else{
+                RequestDispatcher rd = request.getRequestDispatcher("error.jsp");
+                rd.forward(request, response);
+            }
+        }
+        catch(Exception e){
+            RequestDispatcher rd = request.getRequestDispatcher("error.jsp");
+            rd.forward(request, response);
+        }
+        finally{
+            out.close();
+        }
+    }
+
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }
+    private Data getResult(ResultSet rs) throws SQLException {
+        int temp=0;
+        Data dt = new Data();
+        if (rs.next()) {
+            ProductBean pbi = new ProductBean();
+            pbi.setId(rs.getInt("ID"));
+            temp = pbi.getId();
+            dt.seti(temp);
+
+        }
+        return dt;
+    }
+
+}
