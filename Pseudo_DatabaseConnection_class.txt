@@ -1,0 +1,84 @@
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+  class DatabaseConnection{
+
+      Statement stmt;
+      ResultSet res;
+      Connection conn;
+      PreparedStatement insert;
+
+
+      DatabaseConnection(){
+
+    }
+
+      Connection setConnection(){
+       
+    }
+      ResultSet getResult(String query, Connection conn)
+    {
+        this.conn = conn;
+        try{
+            stmt = conn.createStatement();
+            res = stmt.executeQuery(query);
+        }
+        catch(Exception e)
+        {
+        }
+        return res;
+    }
+      void setvalue(int ID,String username,String pass,Connection conn,String query)
+    {
+        this.conn = conn;
+        try{
+           insert=conn.prepareStatement(query);
+            insert.setInt(1,ID);
+            insert.setString(2,username);
+            insert.setString(3,pass);
+            insert.executeUpdate();
+        }
+        catch(Exception e)
+        {
+        }
+
+    }
+      void setvalue2(int ID1,int ID2,int ID3,Connection conn,String query)
+    {
+        this.conn = conn;
+        try{
+            insert=conn.prepareStatement(query);
+            insert.setInt(1,ID1);
+            insert.setInt(2,ID2);
+            insert.setInt(3,ID3);
+            insert.executeUpdate();
+        }
+        catch(Exception e)
+        {
+        }
+
+    }
+      void setvalue3(int ID1,int ID2,int ID3,String data,int ID4,Connection conn,String query)
+    {
+        this.conn = conn;
+        try{
+            insert=conn.prepareStatement(query);
+            insert.setInt(1,ID1);
+            insert.setInt(2,ID2);
+            insert.setInt(3,ID3);
+            insert.setString(4,data);
+            insert.setInt(5,ID4);
+            insert.executeUpdate();
+        }
+        catch(Exception e)
+        {
+        }
+
+    }
+
+
+}
