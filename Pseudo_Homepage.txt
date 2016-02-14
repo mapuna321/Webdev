@@ -1,0 +1,14 @@
+
+
+    <title>Products</title>
+will store username into session
+and will retreive it from session for displaying
+<h1>Welcome <%=session.getAttribute("name")%></h1>
+<h3>Products</h3>
+<form action ="ProductFetcher" method ="POST">
+asking to select for what user want to view
+<select name="Products">
+    <option value="Cars">Inventory</option>
+    <option value="Inventory">Inventory</option>
+    <input type="submit" value="Submit">
+</select>
