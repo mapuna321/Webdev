@@ -1,0 +1,23 @@
+
+<form action="GetProduct" method="post">
+<table>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Iterator" %>
+<%@ page import="mycart.ProductBean" %>
+    <%= new java.util.Date() %>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><pre>                          <td><input type="submit" name ="taken" value="View Cart"></td><td></td><td><input type="submit" name ="take" value="Product History"></td><td></td><td><input type="submit" name ="take3" value="Recommended Product"></td><td></td><td><input type="submit" name ="take2" value="Log Out"></td></pre></tr>
+ </form>
+<form  action="Search" method="post">
+  <tr><td><input type="text" id="search" name = "search"></td> <td><input type="submit" value="Search"></td> </tr>
+</form>
+  <form action="CartManager" method="get">
+    <tr><td></td><td></td><td><b>Title</b></td><td></td><td><b>Author</b></td><td></td><td><b>Publication</b></td><td></td><td><b>Price</b></td></tr>
+  <%  ArrayList<ProductBean> books;
+  books = (ArrayList<ProductBean>) session.getAttribute("Car");
+  Iterator it = books.iterator();
+  mycart.ProductBean pb = null;
+  while (it.hasNext()) {
+    pb = (ProductBean)it.next();
+    out.println("<tr><td><img src="+pb.getImage()+" style=\"width:94px;height:98px\"></td>  <td></td><td>"+pb.getName()+"</td> <td></td> <td>"+ pb.getPrice()+"</td><td></td><td><input type=\"submit\" name=\""+Integer.toString(pb.getId()*10)+"\" value=\"Add To Cart\"></td><td></td><td><input type=\"submit\" name=\""+Integer.toString((pb.getId()*10))+"\" value=\"Read Reviews\"td></tr><br>");
+  }
+%>
