@@ -1,0 +1,39 @@
+
+
+public class ProductFetcher extends HttpServlet {
+
+    Connection conn;
+    DatabaseConnection dbconn;
+    String query;
+   
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        PrintWriter out = resp.getWriter();
+        query = "select * from product";
+        dbconn = new DatabaseConnection();
+        conn = dbconn.setConnection();
+        ResultSet res; //resultset will store result
+        res = dbconn.getResult(query,conn);
+        try {
+		    storing the car details into session
+            req.getSession().setAttribute("CAR", getResult(res));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        RequestDispatcher rd = req.getRequestDispatcher("display.jsp");/*SEE*/
+        rd.forward(req,resp);
+    }
+    //function will add all product detail into array of product bean
+    private ArrayList<ProductBean> getResult(ResultSet rs) throws SQLException {
+        ArrayList<ProductBean> result = new ArrayList<ProductBean>();
+        while (rs.next()) {
+            ProductBean pb = new ProductBean();
+            pb.setName(rs.getNString("name"));
+            pb.setPrice(rs.getInt("price"));
+            pb.setId(rs.getInt("product_id"));
+            result.add(pb);
+        }
+
+        return result;
+    }
+}
