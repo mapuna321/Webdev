@@ -1,0 +1,65 @@
+
+
+public class ReviewProcess extends HttpServlet {
+
+    Connection conn;
+    ResultSet res,res2;
+    int id,temp;
+
+    String username, password, query,query2,store;
+    DatabaseConnection dbconn;
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        dbconn = new DatabaseConnection();
+        conn = dbconn.setConnection();
+        query="select * from review where product_id='"+id+"'";
+        res=dbconn.getResult(query,conn);
+        try {
+            if(res.next()) {
+                ArrayList<ProductBean> result = new ArrayList<ProductBean>();
+                ProductBean pb = new ProductBean();
+                pb.setName(res.getNString("data"));
+                pb.setStar(res.getInt("star"));
+                temp = res.getInt("user_id");
+                query = "select * from admin where ID='" + temp + "'";
+                res2 = dbconn.getResult(query, conn);
+                if (res2.next()) {
+                    pb.setAuthor(res2.getNString("username"));
+                }
+                result.add(pb);
+                while (res.next()) {
+                    pb = new ProductBean();
+                    pb.setTitle(res.getNString("data"));
+                    pb.setPrice(res.getInt("star"));
+                    temp = res.getInt("user_id");
+                    query = "select * from admin where ID='" + temp + "'";
+                    res2 = dbconn.getResult(query, conn);
+                    if (res2.next()) {
+                        pb.setAuthor(res2.getNString("username"));
+                    }
+                    result.add(pb);
+                }
+                request.getSession().setAttribute("taken",result);
+                RequestDispatcher rd = request.getRequestDispatcher("reviewprocess.jsp");
+                rd.forward(request,response);
+            }
+            else {
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+        return result;
+    }
+
+}
