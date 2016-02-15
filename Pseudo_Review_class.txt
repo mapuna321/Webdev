@@ -1,0 +1,56 @@
+
+
+public class Reviews extends HttpServlet {
+
+    Connection conn;
+    ResultSet res;
+    Statement stmt;
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try{
+            //entrying review into the database
+			
+            query="select * from review";
+            res=dbconn.getResult(query,conn);
+            if(res.next())
+            {
+               query="SELECT * FROM review where user_id='"+id1+"' and product_id='"+temp+"'";
+                res=dbconn.getResult(query,conn);
+                if(res.next())
+                {
+                        store = res.getInt("id");
+                        query="UPDATE review set data='"+username+"' where id='"+store+"'";
+                        stmt.executeUpdate(query);
+                        query="UPDATE review set star='"+t+"' where id='"+store+"'";
+                        stmt.executeUpdate(query);
+                }
+                else{
+                    query="SELECT max(id) FROM review";
+                    res=dbconn.getResult(query,conn);
+                    if(res.next()){
+                        store=res.getInt("max(id)");
+                        store=store+1;
+                        query="insert into review values(?,?,?,?,?)";
+                        dbconn.setvalue3(store,id1,temp,username,t,conn,query);
+                    }
+                }
+            }
+            else{
+                query="insert into review values(?,?,?,?,?)";
+                dbconn.setvalue3(1,id1,temp,username,t,conn,query);
+            }
+            DisplayHistory dh=new DisplayHistory();
+            dh.doPost(request,response);
+
+        }
+        catch(Exception e){
+            //error page
+        }
+        finally{
+            out.close();
+        }
+    }
+
+
+}
