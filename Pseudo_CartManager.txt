@@ -1,0 +1,73 @@
+//fuck ho gya
+//solve it
+
+
+public class CartManager extends HttpServlet {
+
+    Connection conn;
+    ResultSet res,res1;
+    int id1,id2,id3;
+
+    String username, password, query,query1,option;
+    DatabaseConnection dbconn;
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
+        try{
+            Data dt1;
+            Data dt2;
+            dt1= (Data) request.getSession().getAttribute("Identity");
+            dt2= (Data) request.getSession().getAttribute("max");
+            id1=dt1.geti();//UserId
+            id3=dt2.geti();//No. Of Products
+			//identifying user's choice
+            for(int i=1;i<=id3;i++){
+                String ai = request.getParameter(Integer.toString((i*10)+1));
+                String iai = request.getParameter(Integer.toString((i*10)));
+                if(ai!=null)
+                {
+                    id2=i;//ProductSelected
+                    option=ai;
+                }
+                if(iai!=null)
+                {
+                    id2=i;
+                    option=iai;
+                }
+            }
+            int store =0;
+            if(option.equals("Add To Cart")) {
+                query = "select * from cart";
+                res = dbconn.getResult(query, conn);
+                if (res.next()) {
+                    query1 = "select max(order_id) from cart";
+                    res1 = dbconn.getResult(query1, conn);
+                    if (res1.next()) {
+                        store = res1.getInt("max(order_id)");
+                        query = "insert into cart values(?,?,?)";
+                        dbconn.setvalue2(store + 1, id1, id2, conn, query);
+                    }
+
+                } else {
+                    query = "insert into cart values(?,?,?)";
+                    dbconn.setvalue2(1, id1, id2, conn, query);
+                }
+
+                RequestDispatcher rd = request.getRequestDispatcher("display.jsp");
+                rd.forward(request, response);
+            }
+            if(option.equals("Read Reviews"))
+            {
+                Data dt=new Data();
+                dt.seti(id2);
+                request.getSession().setAttribute("send",dt);
+                ReviewProcess rp = new ReviewProcess();
+                rp.doPost(request,response);
+
+            }
+
+        }
+    }
+
+}
