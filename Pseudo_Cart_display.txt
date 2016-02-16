@@ -1,0 +1,20 @@
+
+<h2><b>Your Cart</b></h2>
+
+        <form action="History" method="post">
+    <%  ArrayList<ProductBean> cars;
+        cars = (ArrayList<ProductBean>) session.getAttribute("Cartbook");
+        Iterator it = cars.iterator();
+        ProductBean pbi = null;
+        while (it.hasNext()) {
+            pbi = (ProductBean)it.next();
+            out.println("<tr> <td></td><td>"+pbi.getName()+"</td> <td>"+ pbi.getPrice()+"</td><td></td><td><input type=\"submit\" name=\""+Integer.toString((pbi.getId()*10)+1)+"\"value=\"Buy\"></td><td></td><td><input type=\"submit\" name=\""+Integer.toString((pbi.getId()*10)+2)+"\"value=\"Remove\"></td></tr><br>");
+        }
+    %>
+       </form>
+
+
+    </table>
+</form>
+</body>
+</html>
