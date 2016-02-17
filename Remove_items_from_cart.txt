@@ -1,0 +1,84 @@
+
+
+public class History extends HttpServlet {
+
+    Connection conn;
+    Statement stmt;
+    ResultSet res,res1;
+    int id1,id2,id3;
+
+    String username, password, query,query1,option;
+    DatabaseConnection dbconn;
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("())text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        try{
+            Data dt1;
+            Data dt2;
+            dt1= (Data) request.getSession().getAttribute("Identity");
+            dt2= (Data) request.getSession().getAttribute("maxorder");
+            id1=dt1.geti();//UserId
+            id3=dt2.geti();//No. Of orders
+			//picking user's choice
+            for(int i=1;i<=id3;i++){
+                String ai = request.getParameter(Integer.toString((i*10)+1));
+                String iai = request.getParameter(Integer.toString((i*10)+2));
+                if(ai!=null)
+                {
+                    id2=i;//OrderSelected
+                    option=ai;
+                }
+                if(iai != null)
+                {
+                    id2=i;
+                    option=iai;
+                }
+            }
+            
+            query="select product_id from cart where order_id ='"+id2+"'";
+            res=dbconn.getResult(query,conn);
+            if(res.next())
+            {
+                i= res.getInt("product_id");
+            }
+            if(option.equals("Buy")){
+                // next
+                query = "select * from orders";
+                res = dbconn.getResult(query, conn);
+                if (res.next()) {
+                    query1 = "select max(order_ID) from orders";
+                    res1 = dbconn.getResult(query1, conn);
+                    if (res1.next()) {
+                        store = res1.getInt("max(order_ID)");
+                        query = "insert into orders values(?,?,?)";
+                        dbconn.setvalue2(store + 1, id1, i, conn, query);
+                    }
+
+                } else {
+                    query = "insert into orders values(?,?,?)";
+                    dbconn.setvalue2(1, id1, i, conn, query);
+                }
+                query="delete from cart where order_id ='"+id2+"'";
+                stmt = conn.createStatement();
+                stmt.executeUpdate(query);//next
+
+            }
+            if(option.equals("Remove"))
+            {
+                query="delete from cart where order_id ='"+id2+"'";
+                stmt = conn.createStatement();
+                stmt.executeUpdate(query);
+            }
+            view_cart ob = new view_cart();
+            ob.doPost(request,response);
+
+        }
+        catch(Exception e){
+        }
+        finally{
+            out.close();
+        }
+    }
+}
