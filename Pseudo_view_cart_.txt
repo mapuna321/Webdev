@@ -1,0 +1,49 @@
+
+
+
+public class See extends HttpServlet {
+
+    Connection conn;
+    ResultSet res,res2;
+    int id,temp;
+
+    String username, password, query,query2;
+    DatabaseConnection dbconn;
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try{
+            Data dt;
+            dt = (Data) request.getSession().getAttribute("Identity");
+            int i = dt.geti();
+            query = "select * from cart where user_id='" + i + "'";
+            dbconn = new DatabaseConnection();
+            conn = dbconn.setConnection();
+            ResultSet res, res1;
+            res = dbconn.getResult(query, conn);
+
+            ArrayList<ProductBean> bOOk = new ArrayList<ProductBean>();
+            try {
+                while (res.next()) {
+                    int temp = res.getInt("product_id");
+                    query = "select * from product where product_id='" + temp + "'";
+                    res1 = dbconn.getResult(query, conn);
+                    while (res1.next()) {
+                        ProductBean pb = new ProductBean();
+                        add product details to array list
+                    }
+
+                }
+                request.getSession().setAttribute("Cartbook", car);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            RequestDispatcher rd = request.getRequestDispatcher("cartdisplay.jsp");
+            rd.forward(request, response);
+
+      }
+    }
+
+
+}
